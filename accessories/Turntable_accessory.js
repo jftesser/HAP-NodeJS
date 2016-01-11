@@ -6,8 +6,11 @@ var execute = function(accessory,characteristic,value) {
   console.log("executed accessory: " + accessory + ", and characteristic: " + characteristic + ", with value: " +  value + "."); 
 };
 
+var turntable_target_val = undefined;
+var turntable_current_val = undefined;
+
 exports.accessory = {
-  displayName: "Garage Door Opener",
+  displayName: "Turntable",
   username: "3C:5A:3D:EE:5E:FA",
   pincode: "031-45-154",
   services: [{
@@ -17,7 +20,7 @@ exports.accessory = {
       onUpdate: null,
       perms: ["pr"],
       format: "string",
-      initialValue: "Garage Door Opener",
+      initialValue: "Turntable",
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Name of the accessory",
@@ -70,7 +73,7 @@ exports.accessory = {
       onUpdate: null,
       perms: ["pr"],
       format: "string",
-      initialValue: "Garage Door Opener Control",
+      initialValue: "Turntable",
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Name of service",
@@ -79,40 +82,42 @@ exports.accessory = {
       cType: types.CURRENT_DOOR_STATE_CTYPE,
       onUpdate: function(value) { 
         console.log("Change:",value); 
-        execute("Garage Door - current door state", "Current State", value); 
+        execute("Turntable", "Current State", value); 
+        turntable_current_val = value;
       },
       onRead: function(callback) {
         console.log("Read:");
-        execute("Garage Door - current door state", "Current State", null);
-        callback(undefined); // only testing, we have no physical device to read from
+        execute("Turntable", "Current State", null);
+        callback(turntable_current_val); // only testing, we have no physical device to read from
       },
       perms: ["pr","ev"],
       format: "int",
       initialValue: 0,
       supportEvents: false,
       supportBonjour: false,
-      manfDescription: "BlaBla",
+      manfDescription: "Turntable Current State",
       designedMinValue: 0,
-      designedMaxValue: 4,
+      designedMaxValue: 1,
       designedMinStep: 1,
       designedMaxLength: 1    
     },{
       cType: types.TARGET_DOORSTATE_CTYPE,
       onUpdate: function(value) { 
         console.log("Change:",value); 
-        execute("Garage Door - target door state", "Current State", value); 
+        turntable_target_val = value;
+        execute("Turntable", "Target State", value); 
       },
       onRead: function(callback) {
         console.log("Read:");
-        execute("Garage Door - target door state", "Current State", null);
-        callback(undefined); // only testing, we have no physical device to read from
+        execute("Turntable", "Target State", null);
+        callback(turntable_target_val); // only testing, we have no physical device to read from
       },
       perms: ["pr","pw","ev"],
       format: "int",
       initialValue: 0,
       supportEvents: false,
       supportBonjour: false,
-      manfDescription: "BlaBla",
+      manfDescription: "Turntable Target State",
       designedMinValue: 0,
       designedMaxValue: 1,
       designedMinStep: 1,
@@ -121,11 +126,11 @@ exports.accessory = {
       cType: types.OBSTRUCTION_DETECTED_CTYPE,
       onUpdate: function(value) { 
         console.log("Change:",value); 
-        execute("Garage Door - obstruction detected", "Current State", value); 
+        execute("Turntable", "Obstruction", value); 
       },
       onRead: function(callback) {
         console.log("Read:");
-        execute("Garage Door - obstruction detected", "Current State", null);
+        execute("Turntable", "Obstruction", null);
         callback(undefined); // only testing, we have no physical device to read from
       },
       perms: ["pr","ev"],
@@ -133,7 +138,7 @@ exports.accessory = {
       initialValue: false,
       supportEvents: false,
       supportBonjour: false,
-      manfDescription: "BlaBla"
+      manfDescription: "Turntable Obstruction"
     }]
   }]
 }

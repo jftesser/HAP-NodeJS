@@ -5,7 +5,7 @@ var exports = module.exports = {};
 var execute = function(accessory,characteristic,value){ console.log("executed accessory: " + accessory + ", and characteristic: " + characteristic + ", with value: " +  value + "."); }
 
 exports.accessory = {
-  displayName: "Thermostat 1",
+  displayName: "Volume",
   username: "CA:3E:BC:4D:5E:FF",
   pincode: "031-45-154",
   services: [{
@@ -15,7 +15,7 @@ exports.accessory = {
       onUpdate: null,
       perms: ["pr"],
       format: "string",
-      initialValue: "Thermostat 1",
+      initialValue: "Volume",
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Bla",
@@ -68,17 +68,17 @@ exports.accessory = {
       onUpdate: null,
       perms: ["pr"],
       format: "string",
-      initialValue: "Thermostat Control",
+      initialValue: "Volume",
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Bla",
       designedMaxLength: 255   
     },{
       cType: types.CURRENTHEATINGCOOLING_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Thermostat", "Current HC", value); },
+      onUpdate: function(value) { console.log("Change:",value); execute("Volume", "Current HC", value); },
       perms: ["pr","ev"],
       format: "int",
-      initialValue: 0,
+      initialValue: 3,
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Current Mode",
@@ -88,10 +88,10 @@ exports.accessory = {
       designedMinStep: 1,    
     },{
       cType: types.TARGETHEATINGCOOLING_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Thermostat", "Target HC", value); },
+      onUpdate: function(value) { console.log("Change:",value); execute("Volume", "Target HC", value); },
       perms: ["pw","pr","ev"],
       format: "int",
-      initialValue: 0,
+      initialValue: 3,
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Target Mode",
@@ -100,17 +100,25 @@ exports.accessory = {
       designedMinStep: 1,
     },{
       cType: types.CURRENT_TEMPERATURE_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Thermostat", "Current Temperature", value); },
+      onUpdate: function(value) { console.log("Change:",value); execute("Volume", "Current Temperature", value); },
+      onRead: function(callback) {
+        console.log("resetting read");
+        callback(20); // reset!
+      },
       perms: ["pr","ev"],
       format: "int",
       initialValue: 20,
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Current Temperature",
-      unit: "celsius"
+      unit: "fahrenheit"
     },{
       cType: types.TARGET_TEMPERATURE_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Thermostat", "Target Temperature", value); },
+      onUpdate: function(value) { console.log("Change:",value); execute("Volume", "Target Temperature", value); },
+      onRead: function(callback) {
+        console.log("resetting target");
+        callback(20); // reset!
+      },
       perms: ["pw","pr","ev"],
       format: "int",
       initialValue: 20,
@@ -120,13 +128,13 @@ exports.accessory = {
       designedMinValue: 16,
       designedMaxValue: 38,
       designedMinStep: 1,
-      unit: "celsius"
+      unit: "fahrenheit"
     },{
       cType: types.TEMPERATURE_UNITS_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Thermostat", "Unit", value); },
+      onUpdate: function(value) { console.log("Change:",value); execute("Volume", "Unit", value); },
       perms: ["pr","ev"],
       format: "int",
-      initialValue: 0,
+      initialValue: 1,
       supportEvents: false,
       supportBonjour: false,
       manfDescription: "Unit"
