@@ -1,3 +1,4 @@
+var control = require("./control.js");
 // HomeKit types required
 var types = require("./types.js");
 var exports = module.exports = {};
@@ -106,6 +107,8 @@ exports.accessory = {
         console.log("Change:",value); 
         turntable_target_val = value;
         execute("Turntable", "Target State", value); 
+        if (value == 1)
+          control.setTurntable();
       },
       onRead: function(callback) {
         console.log("Read:");

@@ -1,7 +1,9 @@
+var control = require("./control.js");
 // HomeKit types required
 var types = require("./types.js")
 var exports = module.exports = {};
 
+var curr_val = 20;
 var execute = function(accessory,characteristic,value){ console.log("executed accessory: " + accessory + ", and characteristic: " + characteristic + ", with value: " +  value + "."); }
 
 exports.accessory = {
@@ -100,7 +102,10 @@ exports.accessory = {
       designedMinStep: 1,
     },{
       cType: types.CURRENT_TEMPERATURE_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Channel", "Current Temperature", value); },
+      onUpdate: function(value) { 
+        curr_val = value;
+        console.log("Change:",value); 
+        execute("Channel", "Current Temperature", value); },
       onRead: function(callback) {
         console.log("resetting current");
         callback(20); // reset!
@@ -114,7 +119,15 @@ exports.accessory = {
       unit: "fahrenheit"
     },{
       cType: types.TARGET_TEMPERATURE_CTYPE,
-      onUpdate: function(value) { console.log("Change:",value); execute("Channel", "Target Temperature", value); },
+      onUpdate: function(value) { 
+        console.log("Change:",value); 
+        console.log(curr_val);
+        execute("Channel", "Target Temperature", value); 
+        if (value > curr_val) control.channelUp();
+        else control.channelDown();
+
+        curr_val = value;
+      },
       onRead: function(callback) {
         console.log("resetting target");
         callback(20); // reset!
