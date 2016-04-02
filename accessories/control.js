@@ -1,5 +1,6 @@
 "use strict";
 var xhr = require('./xhr');
+var serial = require("./serial.js")
 // functions for controlling artichoke and ir blaster
 var exports = module.exports = {};
 
@@ -37,34 +38,42 @@ var turnOffArtichoke = function(){
 exports.setAntenna = function() {
 	console.log("setAntenna");
 	turnOffArtichoke();
+	serial.send("tv");
 };
 
 exports.setAppleTV = function() {
 	console.log("setAppleTV");
 	turnOffArtichoke();
+	serial.send("appletv");
 };
 
 exports.channelUp = function() {
 	console.log("channelUp");
+	serial.send("channel_up");
 };
 
 exports.channelDown = function() {
 	console.log("channelDown");
+	serial.send("channel_down");
 };
 
 exports.setTurntable = function() {
 	console.log("setTurntable");
+	serial.send("turntable");
 };
 
 exports.volumeUp = function() {
 	console.log("volumeUp");
+	serial.send("volume_up");
 };
 
 exports.volumeDown = function() {
 	console.log("volumeDown");
+	serial.send("volume_down");
 };
 
 exports.setXbox = function() {
 	console.log("setXbox");
 	turnOffArtichoke();
+	serial.send("xbox");
 };
