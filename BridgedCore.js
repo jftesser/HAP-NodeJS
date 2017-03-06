@@ -105,5 +105,5 @@ bridge.publish({
   username: "CC:22:3D:E3:C5:F8",
   port: 51826,
   pincode: "031-45-154",
-  category: Accessory.Categories.OTHER
+  category: Accessory.Categories.BRIDGE
 });
