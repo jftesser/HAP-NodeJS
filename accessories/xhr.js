@@ -1,5 +1,5 @@
 "use strict";
-var _ = require('../bower_components/lodash/lodash');
+var _ = require('lodash');
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 module.exports = function(options) {
@@ -38,11 +38,14 @@ module.exports = function(options) {
         var dataStrings = [];
         for (var key in options.data) {
           var value = options.data[key];
-          dataStrings.push(window.encodeURIComponent(key) +
+          dataStrings.push(encodeURIComponent(key) +
                            "=" +
-                           window.encodeURIComponent(value));
+                           encodeURIComponent(value));
+          console.log(encodeURIComponent(key) +
+                           "=" +
+                           encodeURIComponent(value));
         }
-        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        req.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
         req.send(dataStrings.join('&'));
       } else {
         // By default, use multipart
