@@ -1,3 +1,5 @@
+var control = require("./control.js");
+
 var Accessory = require('../').Accessory;
 var Service = require('../').Service;
 var Characteristic = require('../').Characteristic;
@@ -5,62 +7,61 @@ var uuid = require('../').uuid;
 var err = null; // in case there were any problems
 
 // here's a fake hardware device that we'll expose to HomeKit
-var FAKE_OUTLET = {
+var TV = {
     setPowerOn: function(on) {
-    console.log("Turning the outlet %s!...", on ? "on" : "off");
-    if (on) {
-          FAKE_OUTLET.powerOn = true;
+    console.log("Turning the tv %s!...", on ? "on" : "off");
+    if (!on) {
           if(err) { return console.log(err); }
-          console.log("...outlet is now on.");
-    } else {
-          FAKE_OUTLET.powerOn = false;
-          if(err) { return console.log(err); }
-          console.log("...outlet is now off.");
+          console.log("...tv is now off.");
+          control.sendCommand("off");
     }
+
+    TV.powerOn = true; // setting back to on automatically for now
   },
-    identify: function() {
-    console.log("Identify the outlet.");
-    }
+  identify: function() {
+  console.log("Identify the tv.");
+  },
+  powerOn: true
 }
 
-// Generate a consistent UUID for our outlet Accessory that will remain the same even when
+// Generate a consistent UUID for our tv Accessory that will remain the same even when
 // restarting our server. We use the `uuid.generate` helper function to create a deterministic
 // UUID based on an arbitrary "namespace" and the accessory name.
-var outletUUID = uuid.generate('hap-nodejs:accessories:Outlet');
+var tvUUID = uuid.generate('hap-nodejs:accessories:TV');
 
 // This is the Accessory that we'll return to HAP-NodeJS that represents our fake light.
-var outlet = exports.accessory = new Accessory('Outlet', outletUUID);
+var tv = exports.accessory = new Accessory('Outlet', tvUUID);
 
 // Add properties for publishing (in case we're using Core.js and not BridgedCore.js)
-outlet.username = "1A:2B:3C:4D:5D:FF";
-outlet.pincode = "031-45-154";
+tv.username = "1A:2B:3C:4D:5D:FF";
+tv.pincode = "031-45-154";
 
 // set some basic properties (these values are arbitrary and setting them is optional)
-outlet
+tv
   .getService(Service.AccessoryInformation)
   .setCharacteristic(Characteristic.Manufacturer, "Oltica")
   .setCharacteristic(Characteristic.Model, "Rev-1")
   .setCharacteristic(Characteristic.SerialNumber, "A1S2NASF88EW");
 
 // listen for the "identify" event for this Accessory
-outlet.on('identify', function(paired, callback) {
-  FAKE_OUTLET.identify();
+tv.on('identify', function(paired, callback) {
+  TV.identify();
   callback(); // success
 });
 
-// Add the actual outlet Service and listen for change events from iOS.
+// Add the actual tv Service and listen for change events from iOS.
 // We can see the complete list of Services and Characteristics in `lib/gen/HomeKitTypes.js`
-outlet
-  .addService(Service.Outlet, "Fake Outlet") // services exposed to the user should have "names" like "Fake Light" for us
+tv
+  .addService(Service.Outlet, "TV") // services exposed to the user should have "names" like "Fake Light" for us
   .getCharacteristic(Characteristic.On)
   .on('set', function(value, callback) {
-    FAKE_OUTLET.setPowerOn(value);
+    TV.setPowerOn(value);
     callback(); // Our fake Outlet is synchronous - this value has been successfully set
   });
 
 // We want to intercept requests for our current power state so we can query the hardware itself instead of
 // allowing HAP-NodeJS to return the cached Characteristic.value.
-outlet
+tv
   .getService(Service.Outlet)
   .getCharacteristic(Characteristic.On)
   .on('get', function(callback) {
@@ -71,7 +72,7 @@ outlet
 
     var err = null; // in case there were any problems
 
-    if (FAKE_OUTLET.powerOn) {
+    if (TV.powerOn) {
       console.log("Are we on? Yes.");
       callback(err, true);
     }
