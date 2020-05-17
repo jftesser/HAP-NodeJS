@@ -3,7 +3,7 @@ var xhr = require('./xhr');
 // functions for talking to the main server
 var exports = module.exports = {};
 
-var server_address = 'http://10.0.1.66:8888'; //'http://mainscreenturnon.local:8888'
+var server_address = 'http://192.168.99.121:8888'; //'http://10.0.1.66:8888'; //'http://mainscreenturnon.local:8888'
 
 exports.sendCommand = function(command) {
 	console.log("sending "+command+" to the server");
